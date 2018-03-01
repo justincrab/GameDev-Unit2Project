@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 426a7c0c3a08c344aa0f2170991e48df
+timeCreated: 1519940479
+licenseType: Pro
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - poi: {fileID: 1535140927587280, guid: b9758e45dc53fdb48978f435d9e0be47, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

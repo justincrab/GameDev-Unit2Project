@@ -8,6 +8,7 @@ public class Slingshot : MonoBehaviour {
     // fields manually set in inspector. class fields - show up in inspector
     public GameObject launchPoint;
     public GameObject Projectile_Prefab;
+    public float velocityMultiplier = 4f;
     public bool _____________;//purely decorative. used to seperate sections of variables in the scripts inspector
     // fields set dynamically
     public Vector3 launchPos;//has x,y,z coordinates for where projetile starts launch from
@@ -49,9 +50,38 @@ public class Slingshot : MonoBehaviour {
     void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+        // If slingshot is not in aimingmode, don't run this code
+        if (!aimingMode) return;
+        // get the current mouse position in 2D screen coordinates
+        Vector3 mousePos2D = Input.mousePosition;
+        // convert the mouse position to 3D world coordinates
+        mousePos2D.z = -Camera.main.transform.position.z;
+        Vector3 mousePos3D = Camera.main.ScreenToWorldPoint(mousePos2D);
+        // find the delta from the launchPos to the mousePos3D
+        Vector3 mouseDelta = mousePos3D - launchPos;
+        // limit mouseDelta to the radius of the Slingshot SphereCollider
+        float maxMagnitude = this.GetComponent<SphereCollider>().radius;
+        if (mouseDelta.magnitude > maxMagnitude)
+        {
+            mouseDelta.Normalize();
+            mouseDelta *= maxMagnitude;
+        }
+        // move the projectile to the new position
+        Vector3 projPos = launchPos + mouseDelta;
+        projectile.transform.position = projPos;
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            // the mouse has been released
+            aimingMode = false;
+            projectile.GetComponent<Rigidbody>().isKinematic = false;
+            projectile.GetComponent<Rigidbody>().velocity = -mouseDelta * velocityMultiplier;
+            FollowCam.S.poi = projectile;
+            projectile = null;
+        }
+    }
 }
